@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      
+
       resources :customers, only: [:index, :show], defaults: {format: :json} do
         collection do
           get 'find'
@@ -16,6 +16,10 @@ Rails.application.routes.draw do
           get 'find'
           get 'find_all'
           get 'random'
+        end
+        member do
+          get 'items'
+          get 'invoices'
         end
       end
 
