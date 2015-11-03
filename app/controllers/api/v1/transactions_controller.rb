@@ -1,24 +1,7 @@
-class Api::V1::TransactionsController < ApplicationController
-  respond_to :json
+class Api::V1::TransactionsController < Api::V1::BaseController
 
-  def index
-    respond_with Transaction.all
-  end
-
-  def show
-    respond_with Transaction.find_by(id: params[:id])
-  end
-
-  def find
-    respond_with Transaction.find_by(finder_params)
-  end
-
-  def find_all
-    respond_with Transaction.where(finder_params)
-  end
-
-  def random
-    respond_with Transaction.all.sample
+  def object_type
+    Transaction
   end
 
   private

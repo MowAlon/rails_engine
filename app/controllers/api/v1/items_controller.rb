@@ -1,24 +1,7 @@
-class Api::V1::ItemsController < ApplicationController
-  respond_to :json
+class Api::V1::ItemsController < Api::V1::BaseController
 
-  def index
-    respond_with Item.all
-  end
-
-  def show
-    respond_with Item.find_by(id: params[:id])
-  end
-
-  def find
-    respond_with Item.find_by(finder_params)
-  end
-
-  def find_all
-    respond_with Item.where(finder_params)
-  end
-
-  def random
-    respond_with Item.all.sample
+  def object_type
+    Item
   end
 
   private

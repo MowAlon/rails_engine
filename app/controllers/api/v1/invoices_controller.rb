@@ -1,27 +1,34 @@
-class Api::V1::InvoicesController < ApplicationController
-  respond_to :json
+class Api::V1::InvoicesController < Api::V1::BaseController
 
-  def index
-    respond_with Invoice.all
+  def object_type
+    Invoice
   end
 
-  def show
-    respond_with Invoice.find_by(id: params[:id])
+  def transactions
+    respond_with Transaction.where(invoice_id: params[:id]).order(:id)
   end
 
-  def find
-    respond_with Invoice.find_by(finder_params)
+  def invoice_items
+    respond_with InvoiceItem.where(invoice_id: params[:id]).order(:id)
   end
 
-  def find_all
-    respond_with Invoice.where(finder_params)
+  def items
+    respond_with current_invoice.items
   end
 
-  def random
-    respond_with Invoice.all.sample
+  def customer
+    respond_with current_invoice.customer
+  end
+
+  def merchant
+    respond_with current_invoice.merchant
   end
 
   private
+
+  def current_invoice
+    Invoice.find_by(id: params[:id])
+  end
 
     def finder_params
       params.permit(:id,

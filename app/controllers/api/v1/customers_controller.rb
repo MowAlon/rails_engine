@@ -1,24 +1,7 @@
-class Api::V1::CustomersController < ApplicationController
-  respond_to :json
+class Api::V1::CustomersController < Api::V1::BaseController
 
-  def index
-    respond_with Customer.all
-  end
-
-  def show
-    respond_with Customer.find_by(id: params[:id])
-  end
-
-  def find
-    respond_with Customer.find_by(finder_params)
-  end
-
-  def find_all
-    respond_with Customer.where(finder_params)
-  end
-
-  def random
-    respond_with Customer.all.sample
+  def object_type
+    Customer
   end
 
   private

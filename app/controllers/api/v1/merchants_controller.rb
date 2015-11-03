@@ -1,24 +1,7 @@
-class Api::V1::MerchantsController < ApplicationController
-  respond_to :json
+class Api::V1::MerchantsController < Api::V1::BaseController
 
-  def index
-    respond_with Merchant.all
-  end
-
-  def show
-    respond_with Merchant.find_by(id: params[:id])
-  end
-
-  def find
-    respond_with Merchant.find_by(finder_params)
-  end
-
-  def find_all
-    respond_with Merchant.where(finder_params)
-  end
-
-  def random
-    respond_with Merchant.all.sample
+  def object_type
+    Merchant
   end
 
   def items
