@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  invoice_id: 
+  credit_card_number: 
+  credit_card_expiration_date: 2015-11-02
+  result: MyString
+
+two:
+  invoice_id: 
+  credit_card_number: 
+  credit_card_expiration_date: 2015-11-02
+  result: MyString
