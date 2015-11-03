@@ -4,7 +4,15 @@ class Api::V1::TransactionsController < Api::V1::BaseController
     Transaction
   end
 
+  def invoice
+    current_transaction.invoice
+  end
+
   private
+
+    def current_transaction
+      Transaction.find_by(id: params[:id])
+    end
 
     def finder_params
       params.permit(:id,
