@@ -1,28 +1,24 @@
 == README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+Rails Engine === Case-insensitive columns in postgres
+There’s a column type called ‘citext’ (instead of ‘string’) that you can use. Rails 4.2+ is ready for this, so there’s not much to do if that’s what you’re using, but you do need to take an extra step in your database creation process to add this column type.
+So, from the top…
+- Use ‘citext’ as the column type in your migrations for any relevant columns… ex:
+	create_table "merchants", force: :cascade do |t|
+    		t.citext   "name"
+	end
+(Alternatively, you could setup additional migrations to change the column types after they’ve been created as normal string column types)
+- Create the DB with ‘rake db:create’ (NOT db:setup)
+- Load the postgres console with 'psql' at the command line
+- From the postgres console, run these commands:
+—> \l
+(backslash + letter ‘el’) [displays all your existing postgres db’s (mine is ‘rails_engine_development’)
+—> \c <your_development_db_name>
+[chooses the db for manipulation]
+—> CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
+—> \dx
+[this should spit out two lines in a table, one of which is citext, showing that you've added it properly]
+—> \q
+[quits the console]
+... and that’s it. That last line told postgres you want access to the ‘citext’ column type, so now you can use it in your database, and your searches will be case-insensitive.
+- Now you can run rake db:migrate and db:seed (or other db loading script), and schema.db should reflect the citext column types you applied. If they say string, something went wrong.

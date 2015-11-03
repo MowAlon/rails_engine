@@ -3,11 +3,17 @@ require 'csv'
 class Seed
 
   def initialize
+    puts "Creating customers"
     create_customers
+    puts "Creating merchants"
     create_merchants
+    puts "Creating invoices"
     create_invoices
+    puts "Creating items"
     create_items
+    puts "Creating transactions"
     create_transactions
+    puts "Creating invoice items"
     create_invoice_items
   end
 
