@@ -5,7 +5,7 @@ class Api::V1::TransactionsController < Api::V1::BaseController
   end
 
   def invoice
-    current_transaction.invoice
+    respond_with current_transaction.invoice
   end
 
   private
@@ -19,6 +19,8 @@ class Api::V1::TransactionsController < Api::V1::BaseController
                     :invoice_id,
                     :credit_card_number,
                     :credit_card_expiration_date,
-                    :result)
+                    :result,
+                    :created_at,
+                    :updated_at)
     end
 end

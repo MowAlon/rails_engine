@@ -9,7 +9,7 @@ class Api::V1::ItemsController < Api::V1::BaseController
   end
 
   def merchant
-    respond_with current_item.merchant_id
+    respond_with current_item.merchant
   end
 
   private
@@ -23,6 +23,8 @@ class Api::V1::ItemsController < Api::V1::BaseController
                     :name,
                     :description,
                     :unit_price,
-                    :merchant_id)
+                    :merchant_id,
+                    :created_at,
+                    :updated_at)
     end
 end

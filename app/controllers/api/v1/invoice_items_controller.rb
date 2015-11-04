@@ -23,6 +23,8 @@ class Api::V1::InvoiceItemsController < Api::V1::BaseController
                     :item_id,
                     :invoice_id,
                     :quantity,
-                    :unit_price)
+                    :unit_price,
+                    :created_at,
+                    :updated_at)
     end
 end

@@ -23,7 +23,7 @@ FactoryGirl.define do
   factory :item do
     name {Faker::Commerce.product_name}
     description {Faker::Lorem.sentence(3)}
-    unit_price {Random.rand(100..10000)}
+    unit_price {Random.rand(100..10000).to_f / 100}
     merchant
   end
 end
@@ -32,7 +32,6 @@ FactoryGirl.define do
   factory :transaction do
     invoice
     credit_card_number {Faker::Business.credit_card_number}
-    credit_card_expiration_date {Faker::Business.credit_card_expiry_date}
     result ["success", "failed"].sample
   end
 end
@@ -42,6 +41,6 @@ FactoryGirl.define do
     item
     invoice
     quantity {Random.rand(1..10)}
-    unit_price {Random.rand(100..10000)}
+    unit_price {Random.rand(100..10000).to_f / 100}
   end
 end

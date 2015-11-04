@@ -69,7 +69,7 @@ RSpec.describe Api::V1::InvoiceItemsController, type: :controller do
 
     it "finds the right invoice_item by unit_price" do
       invoice_item = InvoiceItem.all.sample
-      invoice_item.update(unit_price: 66666)
+      invoice_item.update(unit_price: 666.66)
       get :find, format: :json, unit_price: invoice_item.unit_price
 
       expect(json["id"]).to eq(invoice_item.id)
@@ -84,20 +84,20 @@ RSpec.describe Api::V1::InvoiceItemsController, type: :controller do
 
   context "#find_all" do
     before do
-      InvoiceItem.first.update(unit_price: 11111)
-      InvoiceItem.second.update(unit_price: 11111)
-      InvoiceItem.third.update(unit_price: 33333)
+      InvoiceItem.first.update(unit_price: 111.11)
+      InvoiceItem.second.update(unit_price: 111.11)
+      InvoiceItem.third.update(unit_price: 333.33)
     end
 
     it "can find multiple invoice_items from one attribute" do
       invoice_item1 = InvoiceItem.first
       invoice_item2 = InvoiceItem.second
 
-      get :find_all, format: :json, unit_price: 11111
+      get :find_all, format: :json, unit_price: 111.11
 
       expect(json.count).to eq(2)
-      expect(json.first["unit_price"]).to eq(11111)
-      expect(json.second["unit_price"]).to eq(11111)
+      expect(json.first["unit_price"]).to eq("111.11")
+      expect(json.second["unit_price"]).to eq("111.11")
     end
 
     it "returns an empty array if invoice_items aren't found" do
@@ -109,9 +109,9 @@ RSpec.describe Api::V1::InvoiceItemsController, type: :controller do
 
   context "#random" do
     before do
-      InvoiceItem.first.update(unit_price: 11111)
-      InvoiceItem.second.update(unit_price: 22222)
-      InvoiceItem.third.update(unit_price: 33333)
+      InvoiceItem.first.update(unit_price: 111.11)
+      InvoiceItem.second.update(unit_price: 222.22)
+      InvoiceItem.third.update(unit_price: 333.33)
     end
 
     it "returns a random invoice_item" do

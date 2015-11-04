@@ -41,21 +41,24 @@ class Seed
 
   def create_items
     CSV.foreach(File.join(data_folder, 'items.csv'), headers: true, :header_converters => :symbol) do |row|
+      row[:unit_price] = row[:unit_price].to_f / 100
       Item.create(row.to_hash)
     end
   end
 
   def create_transactions
     CSV.foreach(File.join(data_folder, 'transactions.csv'), headers: true, :header_converters => :symbol) do |row|
-      Transaction.create(row.to_hash)
+      Transaction.create(row.to_hash.except(:credit_card_expiration_date))
     end
   end
 
   def create_invoice_items
     CSV.foreach(File.join(data_folder, 'invoice_items.csv'), headers: true, :header_converters => :symbol) do |row|
+      row[:unit_price] = row[:unit_price].to_f / 100
       InvoiceItem.create(row.to_hash)
     end
   end
 end
 
 seed = Seed.new
+`say Captain, the seeds have been planted.`
