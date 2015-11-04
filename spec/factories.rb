@@ -21,9 +21,9 @@ end
 
 FactoryGirl.define do
   factory :item do
-    name Faker::Commerce.product_name
+    name {Faker::Commerce.product_name}
     description {Faker::Lorem.sentence(3)}
-    unit_price Random.rand(100..10000)
+    unit_price {Random.rand(100..10000)}
     merchant
   end
 end
@@ -41,7 +41,7 @@ FactoryGirl.define do
   factory :invoice_item do
     item
     invoice
-    quantity Random.rand(1..10)
-    unit_price Random.rand(100..10000)
+    quantity {Random.rand(1..10)}
+    unit_price {Random.rand(100..10000)}
   end
 end

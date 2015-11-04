@@ -1,9 +1,5 @@
 require "rails_helper"
 
-def json
-  JSON.parse(response.body)
-end
-
 RSpec.describe Api::V1::CustomersController, type: :controller do
 
   before do
@@ -136,7 +132,6 @@ RSpec.describe Api::V1::CustomersController, type: :controller do
 
       expect(response.body).to eq("null")
     end
-
   end
 
 end
