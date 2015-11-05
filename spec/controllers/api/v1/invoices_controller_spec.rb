@@ -141,4 +141,38 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
     end
   end
 
+  context "#merchant" do
+    it "returns the invoice's merchant" do
+      invoice = Invoice.all.sample
+      merchant = invoice.merchant
+
+      get :merchant, format: :json, id: invoice.id
+
+      expect(json["name"]).to eq(merchant.name)
+    end
+  end
+
+  context "#invoice_items" do
+    before do
+      3.times {FactoryGirl.create(:invoice_item)}
+    end
+
+    it "returns the invoice's invoice items" do
+      invoice = Invoice.first
+      InvoiceItem.all.each{|invoice_item| invoice_item.update(invoice_id: Invoice.second.id)}
+      invoice_item = InvoiceItem.first
+      invoice_item.update(invoice_id: invoice.id)
+      InvoiceItem.second.update(invoice_id: invoice.id)
+
+      get :invoice_items, format: :json, id: invoice.id
+
+      expect(json.count).to eq(2)
+      expect(json.first["id"]).to eq(invoice_item.id)
+      expect(json.first["item_id"]).to eq(invoice_item.item_id)
+      expect(json.first["invoice_id"]).to eq(invoice_item.invoice_id)
+      expect(json.first["unit_price"]).to eq(invoice_item.unit_price.to_s)
+      expect(json.first["quantity"]).to eq(invoice_item.quantity)
+    end
+  end
+
 end

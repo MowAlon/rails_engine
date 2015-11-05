@@ -27,4 +27,5 @@ group :test do
   gem 'rspec-rails'
   gem 'faker'
   gem 'factory_girl_rails', '~> 4.0'
+  gem 'simplecov', :require => false
 end

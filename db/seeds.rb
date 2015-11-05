@@ -2,7 +2,8 @@ require 'csv'
 
 class Seed
 
-  def initialize
+  def initialize(folder = "data")
+    @folder = folder
     puts "Creating customers"
     create_customers
     puts "Creating merchants"
@@ -18,7 +19,7 @@ class Seed
   end
 
   def data_folder
-    File.join(File.expand_path('../..',  __FILE__), "data")
+    File.join(File.expand_path('../..',  __FILE__), @folder)
   end
 
   def create_customers

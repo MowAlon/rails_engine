@@ -120,4 +120,155 @@ RSpec.describe Api::V1::MerchantsController, type: :controller do
     end
   end
 
+  context "#items" do
+    before do
+      3.times {FactoryGirl.create(:item)}
+    end
+
+    it "returns items belonging to the requested merchant" do
+      merchant_id = Item.first.merchant_id
+      Item.first.update_attributes(name: "Test Item 1")
+      Item.second.update_attributes(merchant_id: merchant_id,
+                                    name: "Test Item 2")
+      Item.third.update_attributes(merchant_id: merchant_id + 1,
+                                    name: "Not Test Item")
+
+      get :items, format: :json, id: merchant_id.to_s
+
+      expect(json.count).to eq(2)
+      expect(json.first["name"]).to eq("Test Item 1")
+      expect(json.second["name"]).to eq("Test Item 2")
+    end
+  end
+
+  context "#invoices" do
+    before do
+      3.times {FactoryGirl.create(:invoice)}
+    end
+
+    it "returns invoices belonging to the requested merchant" do
+      merchant_id = Invoice.first.merchant_id
+      Invoice.first.update_attributes(status: "Test Status 1")
+      Invoice.second.update_attributes(merchant_id: merchant_id,
+                                    status: "Test Status 2")
+      Invoice.third.update_attributes(merchant_id: merchant_id + 1,
+                                    status: "Not Test Status")
+
+      get :invoices, format: :json, id: merchant_id.to_s
+
+      expect(json.count).to eq(2)
+      expect(json.first["status"]).to eq("Test Status 1")
+      expect(json.second["status"]).to eq("Test Status 2")
+    end
+  end
+
+  context "#most_revenue" do
+    before do
+      seed_orders(10)
+    end
+
+    it "returns X merchants" do
+      merchant_count = 2
+
+      get :most_revenue, format: :json, quantity: merchant_count
+
+      expect(json.count).to eq(merchant_count)
+      expect(json.first["name"]).to be_kind_of(String)
+    end
+  end
+
+  context "#most_items" do
+    before do
+      seed_orders(10)
+    end
+
+    it "returns X merchants" do
+      merchant_count = 3
+
+      get :most_items, format: :json, quantity: merchant_count
+
+      expect(json.count).to eq(merchant_count)
+      expect(json.first["name"]).to be_kind_of(String)
+    end
+  end
+
+  context "#revenue" do
+    before do
+      seed_orders(10)
+    end
+
+    it "returns 'total_revenue' for a supplied date" do
+      date = Invoice.all.sample.created_at
+
+      get :revenue, format: :json, date: date
+
+      expect(json.keys.first).to eq("total_revenue")
+      expect(json["total_revenue"]).to eq(json["total_revenue"].to_f.to_s)
+    end
+  end
+
+  context "#single_merchant_revenue" do
+    before do
+      seed_orders(10)
+    end
+
+    it "returns 'revenue' for a specified merchant with a supplied date" do
+      invoice = Invoice.all.sample
+      merchant_id = invoice.merchant_id
+      date = invoice.created_at
+
+      get :single_merchant_revenue, format: :json, id: merchant_id, date: date
+
+      expect(json.keys.first).to eq("revenue")
+      expect(json["revenue"]).to eq(json["revenue"].to_f.to_s)
+    end
+
+    it "returns 'revenue' for a specified merchant without a supplied date" do
+      merchant_id = Invoice.all.sample.merchant_id
+
+      get :single_merchant_revenue, format: :json, id: merchant_id
+
+      expect(json.keys.first).to eq("revenue")
+      expect(json["revenue"]).to eq(json["revenue"].to_f.to_s)
+    end
+  end
+
+  context "#favorite_customer" do
+    before do
+      seed_orders(10)
+    end
+
+    it "returns a customer" do
+      merchant_id = Merchant.first.id
+      Invoice.all.each{|invoice| invoice.update(merchant_id: Merchant.second.id)}
+      invoice = Invoice.all.sample
+      invoice.update(merchant_id: merchant_id)
+      customer = invoice.customer
+
+      get :favorite_customer, format: :json, id: merchant_id
+
+      expect(json["first_name"]).to eq(customer.first_name)
+      expect(json["last_name"]).to eq(customer.last_name)
+    end
+  end
+
+  context "#customers_with_pending_invoices" do
+    before do
+      seed_orders(10)
+    end
+
+    it "returns customers" do
+      merchant_id = Merchant.first.id
+      Invoice.all.each{|invoice| invoice.update(merchant_id: Merchant.second.id)}
+      Invoice.all.sample(3).each{|invoice| invoice.update(merchant_id: merchant_id)}
+      Transaction.all.each{|transaction| transaction.update(result: "failed")}
+
+      get :customers_with_pending_invoices, format: :json, id: merchant_id
+
+      expect(json.count).to eq(3)
+      expect(json.first["first_name"]).to be_kind_of(String)
+      expect(json.first["last_name"]).to be_kind_of(String)
+    end
+  end
+
 end

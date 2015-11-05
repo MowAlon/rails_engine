@@ -138,4 +138,33 @@ RSpec.describe Api::V1::InvoiceItemsController, type: :controller do
     end
   end
 
+  context "#invoice" do
+    it "returns the invoice item's invoice" do
+      invoice_item = InvoiceItem.first
+      invoice = invoice_item.invoice
+
+      get :invoice, format: :json, id: invoice_item.id
+
+      expect(json["id"]).to eq(invoice_item.invoice_id)
+      expect(json["customer_id"]).to eq(invoice.customer_id)
+      expect(json["merchant_id"]).to eq(invoice.merchant_id)
+      expect(json["status"]).to eq(invoice.status)
+    end
+  end
+
+  context "#item" do
+    it "returns the invoice item's invoice" do
+      invoice_item = InvoiceItem.first
+      item = invoice_item.item
+
+      get :item, format: :json, id: invoice_item.id
+
+      expect(json["id"]).to eq(invoice_item.item_id)
+      expect(json["name"]).to eq(item.name)
+      expect(json["description"]).to eq(item.description)
+      expect(json["unit_price"]).to eq(item.unit_price.to_s)
+      expect(json["merchant_id"]).to eq(item.merchant_id)
+    end
+  end
+
 end

@@ -1,8 +1,40 @@
+require "simplecov"
+SimpleCov.start("rails")
+
 def json
   JSON.parse(response.body)
 end
 
 require 'factory_girl_rails'
+
+def seed_orders(count)
+  dataset = {
+    merchants: [],
+    customers: [],
+    transactions: [],
+    invoice_items: [],
+    invoices: [],
+    items: []
+  }
+
+  count.times do
+    merchant = create(:merchant)
+    dataset[:merchants] << merchant
+    customer = create(:customer)
+    dataset[:customers] << customer
+
+    invoice = create(:invoice, merchant_id: merchant.id, customer_id: customer.id)
+    dataset[:invoices] << invoice
+    dataset[:transactions] << create(:transaction, invoice_id: invoice.id, result: "success")
+    dataset[:invoice_items] << create(:invoice_item, invoice_id: invoice.id)
+    dataset[:invoice_items] << create(:invoice_item, invoice_id: invoice.id)
+    dataset[:invoice_items] << create(:invoice_item, invoice_id: invoice.id)
+    dataset[:invoice_items] << create(:invoice_item, invoice_id: invoice.id)
+  end
+  dataset
+end
+
+
 
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods

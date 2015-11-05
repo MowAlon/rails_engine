@@ -10,7 +10,7 @@ class Item < ActiveRecord::Base
   end
 
   def self.best_day(item_id)
-    {"best_day" => Invoice.joins(:transactions, :invoice_items).where(transactions: {result: "success"}, invoice_items: {item_id: item_id}).group('invoices.created_at').sum(:quantity)
+    {:best_day => Invoice.joins(:transactions, :invoice_items).where(transactions: {result: "success"}, invoice_items: {item_id: item_id}).group('invoices.created_at').sum(:quantity)
       .sort_by{|date, quantity| quantity}.reverse.first.first}
   end
 

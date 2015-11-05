@@ -30,6 +30,7 @@ Rails.application.routes.draw do
           get 'invoices'
           get 'revenue', to: 'merchants#single_merchant_revenue'
           get 'favorite_customer'
+          get 'customers_with_pending_invoices'
         end
       end
 

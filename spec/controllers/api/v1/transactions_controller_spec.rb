@@ -142,4 +142,18 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
     end
   end
 
+  context "#invoice" do
+    it "returns the transaction's invoice" do
+      transaction = Transaction.first
+      invoice = transaction.invoice
+
+      get :invoice, format: :json, id: transaction.id
+
+      expect(json["id"]).to eq(transaction.invoice_id)
+      expect(json["customer_id"]).to eq(invoice.customer_id)
+      expect(json["merchant_id"]).to eq(invoice.merchant_id)
+      expect(json["status"]).to eq(invoice.status)
+    end
+  end
+
 end

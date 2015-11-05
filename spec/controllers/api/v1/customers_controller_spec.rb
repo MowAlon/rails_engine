@@ -134,4 +134,65 @@ RSpec.describe Api::V1::CustomersController, type: :controller do
     end
   end
 
+  context "#invoices" do
+    before do
+      3.times {FactoryGirl.create(:invoice)}
+    end
+
+    it "returns the customer's invoices" do
+      invoice = Invoice.first
+      customer_id = invoice.customer_id
+      Invoice.second.update(customer_id: customer_id)
+      Invoice.third.update(customer_id: customer_id + 1)
+
+      get :invoices, format: :json, id: customer_id
+
+      expect(json.count).to eq(2)
+      expect(json.first["customer_id"]).to eq(invoice.customer_id)
+      expect(json.first["merchant_id"]).to eq(invoice.merchant_id)
+      expect(json.first["status"]).to eq(invoice.status)
+    end
+  end
+
+  context "#transactions" do
+    before do
+      3.times {FactoryGirl.create(:transaction)}
+    end
+
+    it "returns the customer's transactions" do
+      customer_id = Invoice.first.customer_id
+      Invoice.second.update(customer_id: customer_id)
+      Invoice.third.update(customer_id: customer_id + 1)
+      transaction = Transaction.first
+      Transaction.first.invoice_id = Invoice.first.id
+      Transaction.second.invoice_id = Invoice.second.id
+      Transaction.third.invoice_id = Invoice.third.id
+
+      get :transactions, format: :json, id: customer_id
+
+      expect(json.count).to eq(2)
+      expect(json.first["invoice_id"]).to eq(transaction.invoice_id)
+      expect(json.first["credit_card_number"]).to eq(transaction.credit_card_number)
+      expect(json.first["result"]).to eq(transaction.result)
+    end
+  end
+
+  context "#favorite_merchant" do
+    before do
+      seed_orders(10)
+    end
+
+    it "returns a merchant" do
+      customer_id = Customer.first.id
+      Invoice.all.each{|invoice| invoice.update(customer_id: Customer.second.id)}
+      invoice = Invoice.all.sample
+      invoice.update(customer_id: customer_id)
+      merchant = invoice.merchant
+
+      get :favorite_merchant, format: :json, id: customer_id
+
+      expect(json["name"]).to eq(merchant.name)
+    end
+  end
+
 end
