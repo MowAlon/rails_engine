@@ -175,4 +175,25 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
     end
   end
 
+  context "#transactions" do
+    before do
+      3.times {FactoryGirl.create(:transaction)}
+    end
+
+    it "returns the invoice's transactions" do
+      invoice_id = Transaction.first.invoice.id
+      Transaction.second.update(invoice_id: invoice_id)
+      Transaction.third.update(invoice_id: invoice_id + 1)
+      transaction = Transaction.first
+
+      get :transactions, format: :json, id: invoice_id
+
+      expect(json.count).to eq(2)
+      expect(json.first["invoice_id"]).to eq(transaction.invoice_id)
+      expect(json.first["credit_card_number"]).to eq(transaction.credit_card_number)
+      expect(json.first["result"]).to eq(transaction.result)
+    end
+  end
+
+
 end
