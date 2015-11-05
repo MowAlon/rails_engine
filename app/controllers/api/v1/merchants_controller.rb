@@ -16,6 +16,22 @@ class Api::V1::MerchantsController < Api::V1::BaseController
     respond_with Merchant.most_revenue(params[:quantity].to_i)
   end
 
+  def most_items
+    respond_with Merchant.most_items_sold(params[:quantity].to_i)
+  end
+
+  def revenue
+    respond_with Merchant.revenue_by_date(params[:date])
+  end
+
+  def single_merchant_revenue
+    respond_with Merchant.single_merchant_revenue_by_date(params[:id], params[:date])
+  end
+
+  def favorite_customer
+    respond_with Merchant.favorite_customer(params[:id])
+  end
+
   def wip
     # GET /api/v1/merchants/most_revenue?quantity=x returns the top x merchants ranked by total revenue
 

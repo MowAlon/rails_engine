@@ -12,6 +12,7 @@ Rails.application.routes.draw do
         member do
           get 'invoices'
           get 'transactions'
+          get 'favorite_merchant'
         end
       end
 
@@ -21,10 +22,14 @@ Rails.application.routes.draw do
           get 'find_all'
           get 'random'
           get 'most_revenue'
+          get 'most_items'
+          get 'revenue'
         end
         member do
           get 'items'
           get 'invoices'
+          get 'revenue', to: 'merchants#single_merchant_revenue'
+          get 'favorite_customer'
         end
       end
 
@@ -48,10 +53,13 @@ Rails.application.routes.draw do
           get 'find'
           get 'find_all'
           get 'random'
+          get 'most_revenue'
+          get 'most_items'
         end
         member do
           get 'invoice_items'
           get 'merchant'
+          get 'best_day'
         end
       end
 

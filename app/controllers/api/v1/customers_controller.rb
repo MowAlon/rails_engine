@@ -12,6 +12,10 @@ class Api::V1::CustomersController < Api::V1::BaseController
     respond_with current_customer.transactions
   end
 
+  def favorite_merchant
+    respond_with Customer.favorite_merchant(params[:id])
+  end
+
   private
 
     def current_customer
